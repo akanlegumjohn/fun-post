@@ -1,3 +1,5 @@
+@props(['title' => 'FunPost'])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 text-slate-900 antialiased">
 <head>
@@ -12,13 +14,13 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
             {{-- Logo --}}
             <div class="flex items-center gap-3">
-                <a href="{{ url('/') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight text-slate-900 hover:opacity-90 transition">
-                    <span class="text-2xl">🎭</span>
-                    <span class="bg-gradient-to-r from-amber-500 via-rose-500 to-indigo-600 bg-clip-text text-transparent">FunPost</span>
+                <a href="{{ url('/') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition">
+                   
+                    <span class="text-red-700">FunPost</span>
                 </a>
-                <span class="hidden sm:inline-flex items-center rounded-full bg-amber-50 px-2 py-0.5 text-xs font-semibold text-amber-700 ring-1 ring-inset ring-amber-600/20">
-                    Laughter Engine
-                </span>
+              <div>
+              
+              </div>
             </div>
 
             {{-- Search Bar Placeholder --}}
@@ -39,15 +41,12 @@
 
             {{-- Right Actions --}}
             <div class="flex items-center gap-3">
-                <button 
-                    type="button" 
-                    class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-semibold rounded-full bg-indigo-600 text-white hover:bg-indigo-500 shadow-sm transition"
-                >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    <span>New Laugh</span>
-                </button>
+                 <nav>
+                    <ul class="flex items-center gap-2 ">
+                        <li class=" underline"><a href="{{ url('/') }}" class="text-slate-700 hover:text-slate-900 transition">Home</a></li>
+                        <li class="underline"><a href="{{ url('/faq') }}" class="text-slate-700 hover:text-slate-900 transition">FAQ</a></li>
+                    </ul>
+                </nav>
 
                 <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-rose-400 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm cursor-pointer">
                     FP
