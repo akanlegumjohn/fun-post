@@ -79,17 +79,27 @@ php artisan tinker                                      # Interactive REPL
 - **PHPUnit Proof:** `php artisan test` &rarr; Passed.
 - **Gotcha / Quick Note:** The `x-` prefix tells Blade's compiler to look inside `resources/views/components/` rather than treating it as a standard HTML tag.
 
-### 2026-10-01 — Session 2: Passing Data to Views, Blade Directives & Query Parameters
-
-- **Laracasts Ref:** Views in Laravel, passing data arrays to `view()`, retrieving query params with `request()`.
-- **Concept & Next.js Model:** Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props from a Next.js Server Component page. The keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` is like accessing `searchParams.search`.
+### 1st Oct. 2026 — Views, Data Passing, Query Params, Forms & Session Storage
+- **Laracasts Ref:** Views & Blade, passing data arrays to views, reading query parameters (`request()`), HTML form handling, `@csrf` protection, POST routes, and Laravel session storage (`session()->push()`, `session()->get()`).
+- **Concept & Next.js Model:**
+  - *Data Passing & Query Params:* Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props in a Next.js Server Component page. The array keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` mirrors `searchParams.search`.
+  - *Forms & Sessions:* Standard HTML forms submit POST requests to server endpoints. To prevent CSRF attacks, Laravel enforces `@csrf` tokens. Instead of client state, Laravel stores transient state across redirects in server-side session arrays (`session()->push('post', $post)`), persisting user submissions before we introduce a database.
 - **What I Built in FunPost:**
-    - Updated `routes/web.php` to pass `$posts`, `$user` array, and `request('search')` to the home view.
-    - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
-    - Built `resources/views/home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, `@if` conditionals for search status, and integrated the `<x-post-form>` component.
-- **PHPUnit Proof:** `php artisan test` &rarr; Passed (Status 200 on `/`).
-- **Gotcha / Quick Note:** Use `Route::view('/path', 'view')` when a page is static and doesn't need logic. In Blade, associative array keys are accessed with bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
-  <!-- INSERT NEXT DAILY ENTRY HERE -->
+  - Created `home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, and `@if` conditionals for search status and empty states.
+  - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
+  - Upgraded `<x-post-form>`: added `@csrf` and field `name` attributes (`name="title"`, `name="content"`).
+  - Created `Route::post('/posts')` to receive form data via `request()` and push new jokes into session storage with `session()->push('post', $post)`.
+  - In `Route::get('/')`, retrieved session posts via `session()->get('post', [])`, reversed them with `array_reverse()` to show newest jokes first, and displayed them dynamically.
+- **PHPUnit Proof:** `php artisan test` &rarr; 5 passed (`PostTest::test_user_can_view_home_page`, `test_user_can_submit_joke_to_session`, `test_user_can_view_faq_page`).
+- **Gotchas / Quick Notes:**
+  - Use `Route::view('/path', 'view')` when a page is static and doesn't need logic.
+  - Forms without `@csrf` immediately fail with `419 Page Expired`.
+  - Input elements must have a `name="..."` attribute (not just `id`) for the browser to include their values in the POST request body.
+  - In Blade, associative array keys use bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
+
+
+<!-- INSERT NEXT DAILY ENTRY HERE -->
+
 
 ---
 

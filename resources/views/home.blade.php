@@ -1,6 +1,5 @@
 <x-layout title="FunPost — The Funniest Place on the Internet">
         <div class=" grid gap-6">
-                @dump($user)
                 <h1>Welcome back, {{ $user['name'] }}!</h1>
 
                 <x-post-form type="new" />
