@@ -68,12 +68,28 @@ php artisan tinker                                      # Interactive REPL
 - **PHPUnit Proof:** `php artisan test` &rarr; 2 passed (Unit & Feature example tests).
 - **Gotcha / Quick Note:** Git keeps tracking files even after adding them to `.gitignore` if they were already committed; use `git rm -r --cached <dir>` to untrack them cleanly.
 
-### 30th Sep., 2026 — Page Layout and Props.
+### 2026-09-30 — Session 1: Blade Components, Layouts & Props
 
-- **Laracasts:** Passing and receiving props.
-- **What I Built in FunPost:** Created Faq page
-- **Gotcha / Quick Note:**
-    <!-- INSERT NEXT DAILY ENTRY HERE -->
+- **Laracasts Ref:** Blade component architecture, `<x-layout>`, `$slot`, passing props.
+- **Concept & Next.js Model:** `<x-component>` is Blade's JSX equivalent. `{{ $slot }}` behaves identically to React's `{children}`, and passing `:prop="$var"` acts just like `prop={var}` without needing manual `import` statements.
+- **What I Built in FunPost:**
+    - Built reusable `<x-layout>` component (`resources/views/components/layout.blade.php`).
+    - Created `<x-post-form>` component for joke/post creation (`resources/views/components/post-form.blade.php`).
+    - Created `resources/views/faq.blade.php` wrapped in `<x-layout>`.
+- **PHPUnit Proof:** `php artisan test` &rarr; Passed.
+- **Gotcha / Quick Note:** The `x-` prefix tells Blade's compiler to look inside `resources/views/components/` rather than treating it as a standard HTML tag.
+
+### 2026-10-01 — Session 2: Passing Data to Views, Blade Directives & Query Parameters
+
+- **Laracasts Ref:** Views in Laravel, passing data arrays to `view()`, retrieving query params with `request()`.
+- **Concept & Next.js Model:** Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props from a Next.js Server Component page. The keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` is like accessing `searchParams.search`.
+- **What I Built in FunPost:**
+    - Updated `routes/web.php` to pass `$posts`, `$user` array, and `request('search')` to the home view.
+    - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
+    - Built `resources/views/home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, `@if` conditionals for search status, and integrated the `<x-post-form>` component.
+- **PHPUnit Proof:** `php artisan test` &rarr; Passed (Status 200 on `/`).
+- **Gotcha / Quick Note:** Use `Route::view('/path', 'view')` when a page is static and doesn't need logic. In Blade, associative array keys are accessed with bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
+  <!-- INSERT NEXT DAILY ENTRY HERE -->
 
 ---
 

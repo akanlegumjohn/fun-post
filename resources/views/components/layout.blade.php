@@ -56,7 +56,7 @@
     </header>
 
     {{-- Main Page Content --}}
-    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class=" max-w-6xl w-full mx-auto px-4  flex-1 gap-6 sm:px-6 lg:px-8 py-8">
         {{ $slot }}
     </main>
 
