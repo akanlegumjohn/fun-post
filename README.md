@@ -99,21 +99,28 @@ php artisan tinker                                      # Interactive REPL
     - In Blade, associative array keys use bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
 
 ### 2nd Oct. 2026 — Database Migrations, Schema Design & Eloquent Models
+
 - **Laracasts Ref:** Migrations as database version control (`make:migration`, `migrate`, `migrate:rollback`), `up()` vs `down()` schema lifecycles, altering existing tables, migration squashing/skipping, and introductory Eloquent ORM.
 - **Concept & Next.js Model:** Laravel migrations are equivalent to Prisma or Drizzle migration histories (`prisma migrate dev`). `up()` defines schema changes (DDL) and `down()` defines their rollback. The Eloquent Model (`Post`) represents a single table, replacing Prisma client queries with clean Active Record methods (`Post::all()`, `Post::create()`).
 - **What I Built in FunPost:**
-  - Created initial migration `create_posts_table` (`id`, `timestamps`, `title`, `content`).
-  - Created second migration `add_post_owner_to_posts_table` (`post_owner` nullable column with `dropColumn` rollback in `down()`).
-  - Created `App\Models\Post` model with mass-assignment protection (`protected $fillable = ['title', 'content', 'post_owner']`).
-  - Refactored `routes/web.php` from session storage to true database persistence using `Post::all()` and `Post::create()`.
-  - Updated `home.blade.php` to read Eloquent model properties using arrow syntax (`$post->title`, `$post->content`).
+    - Created initial migration `create_posts_table` (`id`, `timestamps`, `title`, `content`).
+    - Created second migration `add_post_owner_to_posts_table` (`post_owner` nullable column with `dropColumn` rollback in `down()`).
+    - Created `App\Models\Post` model with mass-assignment protection (`protected $fillable = ['title', 'content', 'post_owner']`).
+    - Refactored `routes/web.php` from session storage to true database persistence using `Post::all()` and `Post::create()`.
+    - Updated `home.blade.php` to read Eloquent model properties using arrow syntax (`$post->title`, `$post->content`).
 - **PHPUnit Proof:** `php artisan test` &rarr; 5 passed (`PostTest::test_user_can_create_post_in_database` with `RefreshDatabase` and `assertDatabaseHas`).
+- **Demo / Recording:** [Watch Screen Recording Demo](docs/recordings/demo-2026-10-02.mov)
 - **Gotchas / Quick Notes:**
-  - When running tests with an in-memory database, add `use RefreshDatabase;` to your test classes so migrations run automatically in the test environment.
-  - Eloquent prevents mass-assignment vulnerabilities by default; you must declare allowed fields in `protected $fillable = [...]` before calling `Post::create(...)`.
+    - When running tests with an in-memory database, add `use RefreshDatabase;` to your test classes so migrations run automatically in the test environment.
+    - Eloquent prevents mass-assignment vulnerabilities by default; you must declare allowed fields in `protected $fillable = [...]` before calling `Post::create(...)`.
+
+<video src="docs/recordings/demo-2026-10-02.mov" controls="controls" muted="muted" width="100%">
+  Your browser does not support the video tag.
+</video>
+
+> 🔗 Direct link: [`docs/recordings/demo-2026-10-02.mov`](docs/recordings/demo-2026-10-02.mov)
 
 <!-- INSERT NEXT DAILY ENTRY HERE -->
-
 
 ---
 
@@ -191,3 +198,11 @@ php artisan tinker                                      # Interactive REPL
 - **PHPUnit Proof:** [Test file or method that passed]
 - **Gotcha / Quick Note:** [1 sentence if an error or edge case tripped you up]
 ```
+
+---
+
+## 🎥 Demos & Screen Recordings
+
+### 2026-10-02: Form Handling, Migrations & Eloquent Persistence
+
+Screen recording demonstrating joke creation, CSRF form handling, redirect, and database persistence in the post feed:
