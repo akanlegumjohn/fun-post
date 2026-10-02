@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PostTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Test the home page renders successfully.
      */
@@ -18,9 +21,9 @@ class PostTest extends TestCase
     }
 
     /**
-     * Test submitting a new joke stores it in session and redirects.
+     * Test submitting a new joke stores it in the database and redirects.
      */
-    public function test_user_can_submit_joke_to_session(): void
+    public function test_user_can_create_post_in_database(): void
     {
         $response = $this->post('/posts', [
             'title' => 'Why dark mode?',
@@ -29,6 +32,12 @@ class PostTest extends TestCase
 
         $response->assertRedirect('/');
         $response->assertSessionHas('success', 'Post created successfully!');
+
+        $this->assertDatabaseHas('posts', [
+            'title' => 'Why dark mode?',
+            'content' => 'Because light attracts bugs!',
+            'post_owner' => 'System Admin',
+        ]);
     }
 
     /**

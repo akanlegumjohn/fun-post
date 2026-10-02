@@ -3,7 +3,7 @@
                 <h1>Welcome back, {{ $user['name'] }}!</h1>
 
                 <x-post-form type="new" />
-                <div>
+                <div class=" grid gap-6">
                         @if( @count($posts) === 0)
                         <p>No posts found.</p>
 
@@ -14,9 +14,9 @@
 
                                         <div class="flex-1 space-y-3">
                                                 <div class="  bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm shrink-0">
-                                                        {{ $post['title']}}
+                                                        {{ $post->title }}
                                                 </div>
-                                                <p class="text-sm text-slate-800">{{ $post['content'] }}</p>
+                                                <p class="text-sm text-slate-800">{{ $post->content }}</p>
                                                 <div class="flex items-center justify-between border-t border-slate-100 pt-3">
 
                                                         <div class="flex items-center gap-2">

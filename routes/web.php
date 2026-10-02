@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-    $post = session()->get('post', []);
-    $posts = array_reverse($post);
+    $posts = Post::all();
 
     return view('home', ['posts' => $posts, 'search' => request('search'), 'user' => [
         'name' => 'Kwesi John',
@@ -17,8 +17,12 @@ Route::post('/posts', function () {
 
     $content = request('content');
     $title = request('title');
-    $post = ['title' => $title, 'content' => $content];
-    session()->push('post', $post);
+
+    Post::create([
+        'title' => $title,
+        'content' => $content,
+        'post_owner' => 'System Admin',
+    ]);
 
     return redirect('/')->with('success', 'Post created successfully!');
 });

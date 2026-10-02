@@ -80,23 +80,37 @@ php artisan tinker                                      # Interactive REPL
 - **Gotcha / Quick Note:** The `x-` prefix tells Blade's compiler to look inside `resources/views/components/` rather than treating it as a standard HTML tag.
 
 ### 1st Oct. 2026 — Views, Data Passing, Query Params, Forms & Session Storage
+
 - **Laracasts Ref:** Views & Blade, passing data arrays to views, reading query parameters (`request()`), HTML form handling, `@csrf` protection, POST routes, and Laravel session storage (`session()->push()`, `session()->get()`).
 - **Concept & Next.js Model:**
-  - *Data Passing & Query Params:* Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props in a Next.js Server Component page. The array keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` mirrors `searchParams.search`.
-  - *Forms & Sessions:* Standard HTML forms submit POST requests to server endpoints. To prevent CSRF attacks, Laravel enforces `@csrf` tokens. Instead of client state, Laravel stores transient state across redirects in server-side session arrays (`session()->push('post', $post)`), persisting user submissions before we introduce a database.
+    - _Data Passing & Query Params:_ Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props in a Next.js Server Component page. The array keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` mirrors `searchParams.search`.
+    - _Forms & Sessions:_ Standard HTML forms submit POST requests to server endpoints. To prevent CSRF attacks, Laravel enforces `@csrf` tokens. Instead of client state, Laravel stores transient state across redirects in server-side session arrays (`session()->push('post', $post)`), persisting user submissions before we introduce a database.
 - **What I Built in FunPost:**
-  - Created `home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, and `@if` conditionals for search status and empty states.
-  - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
-  - Upgraded `<x-post-form>`: added `@csrf` and field `name` attributes (`name="title"`, `name="content"`).
-  - Created `Route::post('/posts')` to receive form data via `request()` and push new jokes into session storage with `session()->push('post', $post)`.
-  - In `Route::get('/')`, retrieved session posts via `session()->get('post', [])`, reversed them with `array_reverse()` to show newest jokes first, and displayed them dynamically.
+    - Created `home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, and `@if` conditionals for search status and empty states.
+    - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
+    - Upgraded `<x-post-form>`: added `@csrf` and field `name` attributes (`name="title"`, `name="content"`).
+    - Created `Route::post('/posts')` to receive form data via `request()` and push new jokes into session storage with `session()->push('post', $post)`.
+    - In `Route::get('/')`, retrieved session posts via `session()->get('post', [])`, reversed them with `array_reverse()` to show newest jokes first, and displayed them dynamically.
 - **PHPUnit Proof:** `php artisan test` &rarr; 5 passed (`PostTest::test_user_can_view_home_page`, `test_user_can_submit_joke_to_session`, `test_user_can_view_faq_page`).
 - **Gotchas / Quick Notes:**
-  - Use `Route::view('/path', 'view')` when a page is static and doesn't need logic.
-  - Forms without `@csrf` immediately fail with `419 Page Expired`.
-  - Input elements must have a `name="..."` attribute (not just `id`) for the browser to include their values in the POST request body.
-  - In Blade, associative array keys use bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
+    - Use `Route::view('/path', 'view')` when a page is static and doesn't need logic.
+    - Forms without `@csrf` immediately fail with `419 Page Expired`.
+    - Input elements must have a `name="..."` attribute (not just `id`) for the browser to include their values in the POST request body.
+    - In Blade, associative array keys use bracket syntax (`$user['name']`), whereas Eloquent models will use arrow syntax (`$post->title`).
 
+### 2nd Oct. 2026 — Database Migrations, Schema Design & Eloquent Models
+- **Laracasts Ref:** Migrations as database version control (`make:migration`, `migrate`, `migrate:rollback`), `up()` vs `down()` schema lifecycles, altering existing tables, migration squashing/skipping, and introductory Eloquent ORM.
+- **Concept & Next.js Model:** Laravel migrations are equivalent to Prisma or Drizzle migration histories (`prisma migrate dev`). `up()` defines schema changes (DDL) and `down()` defines their rollback. The Eloquent Model (`Post`) represents a single table, replacing Prisma client queries with clean Active Record methods (`Post::all()`, `Post::create()`).
+- **What I Built in FunPost:**
+  - Created initial migration `create_posts_table` (`id`, `timestamps`, `title`, `content`).
+  - Created second migration `add_post_owner_to_posts_table` (`post_owner` nullable column with `dropColumn` rollback in `down()`).
+  - Created `App\Models\Post` model with mass-assignment protection (`protected $fillable = ['title', 'content', 'post_owner']`).
+  - Refactored `routes/web.php` from session storage to true database persistence using `Post::all()` and `Post::create()`.
+  - Updated `home.blade.php` to read Eloquent model properties using arrow syntax (`$post->title`, `$post->content`).
+- **PHPUnit Proof:** `php artisan test` &rarr; 5 passed (`PostTest::test_user_can_create_post_in_database` with `RefreshDatabase` and `assertDatabaseHas`).
+- **Gotchas / Quick Notes:**
+  - When running tests with an in-memory database, add `use RefreshDatabase;` to your test classes so migrations run automatically in the test environment.
+  - Eloquent prevents mass-assignment vulnerabilities by default; you must declare allowed fields in `protected $fillable = [...]` before calling `Post::create(...)`.
 
 <!-- INSERT NEXT DAILY ENTRY HERE -->
 
