@@ -109,18 +109,18 @@ php artisan tinker                                      # Interactive REPL
     - Refactored `routes/web.php` from session storage to true database persistence using `Post::all()` and `Post::create()`.
     - Updated `home.blade.php` to read Eloquent model properties using arrow syntax (`$post->title`, `$post->content`).
 - **PHPUnit Proof:** `php artisan test` &rarr; 5 passed (`PostTest::test_user_can_create_post_in_database` with `RefreshDatabase` and `assertDatabaseHas`).
-- **Demo / Recording:** [Watch Screen Recording Demo](docs/recordings/demo-2026-10-02.mov)
+- **Demo / Walkthrough:**
+
+  [![▶️ Click to Watch Demo: Form Handling & Database Persistence](docs/recordings/demo-2026-10-02-thumb.png)](docs/recordings/demo-2026-10-02.mp4)
+
+  > 🎥 **[▶️ Click here to play video (MP4)](docs/recordings/demo-2026-10-02.mp4)** &bull; *(also available in [.MOV format](docs/recordings/demo-2026-10-02.mov))*
+
 - **Gotchas / Quick Notes:**
-    - When running tests with an in-memory database, add `use RefreshDatabase;` to your test classes so migrations run automatically in the test environment.
-    - Eloquent prevents mass-assignment vulnerabilities by default; you must declare allowed fields in `protected $fillable = [...]` before calling `Post::create(...)`.
-
-<video src="docs/recordings/demo-2026-10-02.mov" controls="controls" muted="muted" width="100%">
-  Your browser does not support the video tag.
-</video>
-
-> 🔗 Direct link: [`docs/recordings/demo-2026-10-02.mov`](docs/recordings/demo-2026-10-02.mov)
+  - When running tests with an in-memory database, add `use RefreshDatabase;` to your test classes so migrations run automatically in the test environment.
+  - Eloquent prevents mass-assignment vulnerabilities by default; you must declare allowed fields in `protected $fillable = [...]` before calling `Post::create(...)`.
 
 <!-- INSERT NEXT DAILY ENTRY HERE -->
+
 
 ---
 
@@ -198,11 +198,3 @@ php artisan tinker                                      # Interactive REPL
 - **PHPUnit Proof:** [Test file or method that passed]
 - **Gotcha / Quick Note:** [1 sentence if an error or edge case tripped you up]
 ```
-
----
-
-## 🎥 Demos & Screen Recordings
-
-### 2026-10-02: Form Handling, Migrations & Eloquent Persistence
-
-Screen recording demonstrating joke creation, CSRF form handling, redirect, and database persistence in the post feed:
