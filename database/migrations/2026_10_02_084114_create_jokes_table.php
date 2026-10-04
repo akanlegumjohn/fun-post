@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            //
-            $table->string('post_owner')->nullable();
+        Schema::create('jokes', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('title');
+            $table->text('content');
         });
     }
 
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('post_owner');
-            //
-        });
+        Schema::dropIfExists('jokes');
     }
 };

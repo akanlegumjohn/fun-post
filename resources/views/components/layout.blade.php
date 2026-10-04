@@ -1,11 +1,11 @@
-@props(['title' => 'FunPost'])
+@props(['title' => 'devJokes'])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 text-slate-900 antialiased">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $title ?? 'FunPost — Where Humor Lives' }}</title>
+    <title>{{ $title ?? 'devJokes — Where Dev Humor Lives' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-full flex flex-col font-sans">
@@ -16,7 +16,7 @@
             <div class="flex items-center gap-3">
                 <a href="{{ url('/') }}" class="flex items-center gap-2 font-bold text-xl tracking-tight hover:opacity-90 transition">
                    
-                    <span class="text-red-700">FunPost</span>
+                    <span class="text-indigo-600 font-black">dev<span class="text-rose-600">Jokes</span></span>
                 </a>
               <div>
               
@@ -48,8 +48,8 @@
                     </ul>
                 </nav>
 
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-rose-400 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm cursor-pointer">
-                    FP
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-rose-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-white shadow-sm cursor-pointer">
+                    DJ
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
 
     {{-- Minimal Footer --}}
     <footer class="border-t border-slate-200 bg-white py-6 mt-12 text-center text-xs text-slate-500">
-        <p>Built with ❤️ using Laravel & Tailwind CSS • <span class="font-semibold text-slate-700">FunPost</span></p>
+        <p>Built with ❤️ using Laravel & Tailwind CSS • <span class="font-semibold text-slate-700">devJokes</span></p>
     </footer>
 </body>
 </html>

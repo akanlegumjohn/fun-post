@@ -1,6 +1,6 @@
      @props(['type' => 'new'])
 
-     <form action="/posts" method="POST" class="bg-white rounded-2xl p-5 space-y-4 shadow-sm border border-slate-200">
+     <form action="/jokes" method="POST" class="bg-white rounded-2xl p-5 space-y-4 shadow-sm border border-slate-200">
          @csrf
          <div class="my-4">
              @if ($type === 'new')
