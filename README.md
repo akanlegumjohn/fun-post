@@ -1,6 +1,6 @@
 # devJokes ⚡ — My Laravel Mastery Journey
 
-> **Goal:** Master Laravel backend architecture from the ground up to become a fully capable full-stack engineer alongside my Next.js experience.  
+> **Goal:** Master Laravel backend architecture from the ground up to become a proficient full-stack engineer.  
 > **Project:** `devJokes` — A developer jokes, puns, and tech humor sharing platform.  
 > **Commitment:** 2 hours/day (Tuesday to Thursday) | 6 hours/week | 12 weeks (~72 hours total)  
 > **Primary Source:** [Laracasts: Laravel From Scratch](https://laracasts.com/series/laravel-from-scratch-2026) + Official Laravel Docs  
@@ -61,7 +61,7 @@ php artisan tinker                                      # Interactive REPL
 ### 2026-09-29 — Session 0: Architecture Baseline & PHPUnit Setup
 
 - **Laracasts / Docs Ref:** Setup, Testing Architecture & PHPUnit
-- **Concept & Next.js Model:** Laravel separates Unit tests (plain PHP objects) from Feature tests (boots the full framework + in-memory database). Unlike Next.js where API testing often needs mocks or Playwright, Laravel tests real HTTP requests against an in-memory SQLite database via `$this->get(...)`.
+- **Core Concept:** Laravel separates Unit tests (testing isolated PHP classes and logic) from Feature tests (boots the full framework lifecycle + in-memory database to test real HTTP requests, session state, and database assertions via `$this->get(...)`).
 - **What I Built in FunPost:**
     - Switched testing framework from Pest to PHPUnit (`composer.json`, `phpunit/phpunit`).
     - Converted `tests/Feature/ExampleTest.php` and `tests/Unit/ExampleTest.php` to standard PHPUnit test classes.
@@ -72,7 +72,7 @@ php artisan tinker                                      # Interactive REPL
 ### 2026-09-30 — Session 1: Blade Components, Layouts & Props
 
 - **Laracasts Ref:** Blade component architecture, `<x-layout>`, `$slot`, passing props.
-- **Concept & Next.js Model:** `<x-component>` is Blade's JSX equivalent. `{{ $slot }}` behaves identically to React's `{children}`, and passing `:prop="$var"` acts just like `prop={var}` without needing manual `import` statements.
+- **Core Concept:** Blade components (`<x-component>`) allow building reusable, encapsulated UI blocks. The default `{{ $slot }}` accepts nested HTML/Blade markup, and dynamic PHP variables are passed using colon-prefixed attributes (`:prop="$var"`).
 - **What I Built in FunPost:**
     - Built reusable `<x-layout>` component (`resources/views/components/layout.blade.php`).
     - Created `<x-post-form>` component for joke/post creation (`resources/views/components/post-form.blade.php`).
@@ -83,9 +83,9 @@ php artisan tinker                                      # Interactive REPL
 ### 1st Oct. 2026 — Views, Data Passing, Query Params, Forms & Session Storage
 
 - **Laracasts Ref:** Views & Blade, passing data arrays to views, reading query parameters (`request()`), HTML form handling, `@csrf` protection, POST routes, and Laravel session storage (`session()->push()`, `session()->get()`).
-- **Concept & Next.js Model:**
-    - _Data Passing & Query Params:_ Passing data via `return view('home', ['posts' => $posts])` is the direct equivalent of returning props in a Next.js Server Component page. The array keys become variables in Blade (`$posts`). Reading URL queries with `request('search')` mirrors `searchParams.search`.
-    - _Forms & Sessions:_ Standard HTML forms submit POST requests to server endpoints. To prevent CSRF attacks, Laravel enforces `@csrf` tokens. Instead of client state, Laravel stores transient state across redirects in server-side session arrays (`session()->push('post', $post)`), persisting user submissions before we introduce a database.
+- **Core Concept:**
+    - _Data Passing & Query Params:_ Passing data via `return view('home', ['posts' => $posts])` automatically unpacks array keys into variables in Blade (`$posts`). Reading URL query strings is handled via `request('search')`.
+    - _Forms & Sessions:_ Standard HTML forms submit POST requests to server endpoints. Laravel enforces `@csrf` tokens on state-changing requests to prevent cross-site request forgery. Transient data across redirects can be stored directly in server sessions (`session()->push('post', $post)`) before database persistence is set up.
 - **What I Built in FunPost:**
     - Created `home.blade.php`: used `@dump()` to inspect data, `@foreach` to iterate over posts, and `@if` conditionals for search status and empty states.
     - Added clean static routing with `Route::view('/faq', 'faq')` for the FAQ page.
@@ -102,8 +102,8 @@ php artisan tinker                                      # Interactive REPL
 ### 2nd Oct. 2026 — Database Migrations, Eloquent Models & Domain Pivot to `devJokes`
 
 - **Laracasts Ref:** Migrations as database version control (`make:migration`, `migrate`, `migrate:rollback`), `up()` vs `down()` schema lifecycles, altering existing tables, migration squashing/skipping, and introductory Eloquent ORM.
-- **Concept & Next.js Model:**
-    - _Migrations & Active Record:_ Laravel migrations are equivalent to Prisma or Drizzle migration histories (`prisma migrate dev`). `up()` defines schema changes (DDL) and `down()` defines their rollback. The Eloquent Model (`Joke`) represents the `jokes` table, replacing Prisma client queries with clean Active Record methods (`Joke::all()`, `Joke::create()`).
+- **Core Concept:**
+    - _Migrations & Active Record:_ Migrations define and version database schema changes over time. `up()` runs schema additions/modifications and `down()` reverses them. Eloquent Models implement the Active Record pattern, binding a PHP class (`Joke`) to a database table (`jokes`) with methods like `Joke::all()` and `Joke::create()`.
     - _Domain Alignment:_ Domain terminology should match everywhere: Database table (`jokes`), Eloquent Model (`Joke`), Routes (`/jokes`, `/jokes/{id}`), Views (`jokes.index`, `jokes.show`), Components (`<x-joke-form>`), and Test Suites (`JokeTest`).
 - **What I Built in devJokes:**
     - **Domain Pivot to `devJokes`:** Shifted application identity from generic "FunPost" to a dedicated developer jokes and coding humor platform: **`devJokes`**.
@@ -130,9 +130,9 @@ php artisan tinker                                      # Interactive REPL
 ### 4th Oct. 2026 — Full CRUD: Edit, Update, Delete & Method Spoofing
 
 - **Laracasts Ref:** RESTful resource actions, updating database records (`PUT`/`PATCH`), deleting records (`DELETE`), method spoofing with `@method`, and debugging Blade components.
-- **Concept & Next.js Model:**
-    - _HTTP Method Spoofing:_ HTML forms only support `GET` and `POST`. In Next.js/React, you trigger `fetch('/api/jokes/1', { method: 'PUT' | 'DELETE' })` with JavaScript. In server-rendered Laravel Blade, you submit a standard `POST` form containing `@method('PUT')` or `@method('DELETE')`, which injects a hidden `_method` field that Laravel's router intercepts.
-    - _RESTful Update & Delete Conventions:_ Show edit form via `GET /jokes/{id}/edit`, submit updates to `PUT /jokes/{id}`, and trigger deletions via `DELETE /jokes/{id}` with redirect flows.
+- **Core Concept:**
+    - _HTTP Method Spoofing:_ Standard HTML forms only support `GET` and `POST` requests natively. For RESTful actions that require `PUT`, `PATCH`, or `DELETE`, Laravel provides HTTP method spoofing: adding `@method('PUT')` or `@method('DELETE')` inside a `POST` form injects a hidden `_method` field that Laravel's router intercepts.
+    - _RESTful Update & Delete Conventions:_ Show the edit form via `GET /jokes/{id}/edit`, submit updates to `PUT /jokes/{id}`, and trigger deletions via `DELETE /jokes/{id}` with redirect flows.
 - **What I Built in devJokes:**
     - Created edit page view [`resources/views/jokes/edit.blade.php`](resources/views/jokes/edit.blade.php) wrapped in `<x-layout>`.
     - Upgraded `<x-joke-form>` to support both creation (`type="new"`) and editing (`type="edit"`), binding existing values with `old('title', $joke->title)` and `@method('PUT')`.
@@ -150,6 +150,24 @@ php artisan tinker                                      # Interactive REPL
     - HTML `<textarea>` does not have a `value="..."` attribute; content must be placed between the tags: `<textarea>{{ $value }}</textarea>`.
     - Array keys in `@props` must be quoted strings (e.g., `'endpoint' => null`), otherwise PHP treats barewords as undefined global constants.
 
+### 5th Oct. 2026 — Resource Controllers, Route Model Binding & `Route::resource`
+
+- **Laracasts Ref:** Controllers (`php artisan make:controller JokeController --resource`), Implicit Route Model Binding, RESTful action conventions (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`), and `Route::resource`.
+- **Core Concept:**
+    - _Controllers vs Route Closures:_ While route closures work well for quick scripts, controllers group related HTTP actions for a resource into a dedicated class, keeping `routes/web.php` clean and separating routing definitions from request-handling logic.
+    - _Implicit Route Model Binding:_ Type-hinting `Joke $joke` in controller actions replaces manual `Joke::findOrFail($id)` calls. Laravel automatically matches the route wildcard (e.g. `{joke}`) to the variable name (`$joke`), performs the database lookup, and aborts with a 404 if the record doesn't exist.
+    - _Route Cleanliness:_ Rather than manually defining 7 separate routes with repeated strings (`/jokes/{joke}`), `Route::resource('jokes', JokeController::class)` generates all standard RESTful endpoints and names them automatically.
+- **What I Built in devJokes:**
+    - Generated [`app/Http/Controllers/JokeController.php`](app/Http/Controllers/JokeController.php) implementing all 7 resource methods (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`).
+    - Decoupled joke creation from the home feed into its own dedicated view: [`resources/views/jokes/create.blade.php`](resources/views/jokes/create.blade.php).
+    - Added a global **"Post a Joke"** CTA button in the main header navigation ([`resources/views/components/layout.blade.php`](resources/views/components/layout.blade.php)) linking to `/jokes/create`.
+    - Streamlined [`routes/web.php`](routes/web.php) to use `Route::resource('jokes', JokeController::class)`.
+- **PHPUnit Proof:** `php artisan test` &rarr; 9 passed, 26 assertions (`JokeTest`).
+- **Gotchas / Quick Notes:**
+    - **Wildcard naming matters:** Implicit route model binding requires the route parameter `{joke}` to match the method parameter name `$joke`. If you use `{id}`, Laravel fails to bind the model and injects a blank instance instead.
+    - **Route paths vs `Route::resource`:** Generic linters warn about duplicate string literals like `"/jokes/{joke}"`. The idiomatic Laravel fix isn't defining PHP constants, but using `Route::resource`.
+    - **Root URL check:** `Route::resource('jokes', ...)` binds `/jokes`, so ensure your root path `GET /` is also explicitly mapped: `Route::get('/', [JokeController::class, 'index']);`.
+
 <!-- INSERT NEXT DAILY ENTRY HERE -->
 
 
@@ -160,9 +178,9 @@ php artisan tinker                                      # Interactive REPL
 ### Month 1: Core Architecture, CRUD & TDD Foundations
 
 - [ ] **Week 1: Setup, Routing, & The HTTP Lifecycle**
-    - [ ] Session 1 (Tue): Project structure, Artisan CLI, `routes/web.php` & `routes/api.php`, route parameters, named routes.
-    - [ ] Session 2 (Wed): Resource Controllers (`JokeController`), returning views & JSON responses.
-    - [ ] Session 3 (Thu): PHPUnit Feature testing basics: asserting HTTP status, view contents, and redirect headers.
+    - [x] Session 1 (Tue): Project structure, Artisan CLI, `routes/web.php` & `routes/api.php`, route parameters, named routes.
+    - [x] Session 2 (Wed): Resource Controllers (`JokeController`), returning views & JSON responses.
+    - [x] Session 3 (Thu): PHPUnit Feature testing basics: asserting HTTP status, view contents, and redirect headers.
 - [ ] **Week 2: Database Schema, Migrations & Eloquent ORM**
     - [ ] Session 4 (Tue): Database migrations, schema constraints (`jokes` table with foreign key `user_id`).
     - [ ] Session 5 (Wed): Eloquent Model conventions, `$fillable` mass assignment protection, basic queries.
@@ -211,7 +229,7 @@ php artisan tinker                                      # Interactive REPL
     - [ ] Session 33 (Thu): PHPUnit tests with `Queue::fake()`.
 - [ ] **Week 12: API Resources & End-to-End Delivery**
     - [ ] Session 34 (Tue): Eloquent API Resources (`JokeResource`, `CommentResource`) for clean JSON transformation.
-    - [ ] Session 35 (Wed): Sanctum token authentication for connecting to Next.js or external clients.
+    - [ ] Session 35 (Wed): Sanctum token authentication for connecting to SPAs, mobile apps, or external clients.
     - [ ] Session 36 (Thu): **Final Milestone:** Full test suite run (`php artisan test`), code styling (`pint`), final retrospective.
 
 ---
@@ -224,7 +242,7 @@ php artisan tinker                                      # Interactive REPL
 ### [YYYY-MM-DD] — Session X: [Feature / Topic]
 
 - **Laracasts Ref:** [Ep # or Topic]
-- **Concept & Next.js Model:** [1-2 sentences on how it works / compares to Next.js]
+- **Core Concept:** [1-2 sentences on how the feature or architecture works]
 - **What I Built in devJokes:** [1-2 bullets on models, migrations, or endpoints created]
 - **PHPUnit Proof:** [Test file or method that passed]
 - **Gotcha / Quick Note:** [1 sentence if an error or edge case tripped you up]
