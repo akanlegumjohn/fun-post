@@ -150,15 +150,19 @@ php artisan tinker                                      # Interactive REPL
     - HTML `<textarea>` does not have a `value="..."` attribute; content must be placed between the tags: `<textarea>{{ $value }}</textarea>`.
     - Array keys in `@props` must be quoted strings (e.g., `'endpoint' => null`), otherwise PHP treats barewords as undefined global constants.
 
-### 5th Oct. 2026 — Resource Controllers, Route Model Binding & `Route::resource`
+### 5th Oct. 2026 — Resource Controllers, Route Model Binding & Form Validation
 
-- **Laracasts Ref:** Controllers (`php artisan make:controller JokeController --resource`), Implicit Route Model Binding, RESTful action conventions (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`), and `Route::resource`.
+- **Laracasts Ref:** Controllers (`php artisan make:controller JokeController --resource`), Implicit Route Model Binding, RESTful action conventions (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`), `Route::resource`, and Form Validation with `$request->validate()`.
 - **Core Concept:**
-    - _Controllers vs Route Closures:_ While route closures work well for quick scripts, controllers group related HTTP actions for a resource into a dedicated class, keeping `routes/web.php` clean and separating routing definitions from request-handling logic.
+    - _Resource Controllers:_ While route closures work well for quick prototypes, controllers group related HTTP actions for a resource into a dedicated class, keeping `routes/web.php` clean and separating routing definitions from request-handling logic.
     - _Implicit Route Model Binding:_ Type-hinting `Joke $joke` in controller actions replaces manual `Joke::findOrFail($id)` calls. Laravel automatically matches the route wildcard (e.g. `{joke}`) to the variable name (`$joke`), performs the database lookup, and aborts with a 404 if the record doesn't exist.
-    - _Route Cleanliness:_ Rather than manually defining 7 separate routes with repeated strings (`/jokes/{joke}`), `Route::resource('jokes', JokeController::class)` generates all standard RESTful endpoints and names them automatically.
+    - _Controller Validation & Error Bags:_ Calling `$request->validate([...])` inside controller actions inspects request inputs against rules (`required`, `string`, `min:5`, `max:255`). If validation fails, Laravel halts execution, flashes error bags and old input to the session, and automatically redirects back.
+    - _Blade Error Directives:_ Blade's `@error($name)` directive conditionally renders error feedback, providing a scoped `$message` variable to display user-friendly validation messages.
 - **What I Built in devJokes:**
     - Generated [`app/Http/Controllers/JokeController.php`](app/Http/Controllers/JokeController.php) implementing all 7 resource methods (`index`, `create`, `store`, `show`, `edit`, `update`, `destroy`).
+    - Added backend validation in `JokeController::store()` validating `title` (min 5) and `content` (min 10, max 255).
+    - Created reusable form error component [`resources/views/components/forms/error.blade.php`](resources/views/components/forms/error.blade.php) using `@props`, `@error($name)`, and `$message`.
+    - Integrated `<x-forms.error name="title" />` and `<x-forms.error name="content" />` into [`resources/views/components/joke-form.blade.php`](resources/views/components/joke-form.blade.php).
     - Decoupled joke creation from the home feed into its own dedicated view: [`resources/views/jokes/create.blade.php`](resources/views/jokes/create.blade.php).
     - Added a global **"Post a Joke"** CTA button in the main header navigation ([`resources/views/components/layout.blade.php`](resources/views/components/layout.blade.php)) linking to `/jokes/create`.
     - Streamlined [`routes/web.php`](routes/web.php) to use `Route::resource('jokes', JokeController::class)`.
@@ -167,6 +171,8 @@ php artisan tinker                                      # Interactive REPL
     - **Wildcard naming matters:** Implicit route model binding requires the route parameter `{joke}` to match the method parameter name `$joke`. If you use `{id}`, Laravel fails to bind the model and injects a blank instance instead.
     - **Route paths vs `Route::resource`:** Generic linters warn about duplicate string literals like `"/jokes/{joke}"`. The idiomatic Laravel fix isn't defining PHP constants, but using `Route::resource`.
     - **Root URL check:** `Route::resource('jokes', ...)` binds `/jokes`, so ensure your root path `GET /` is also explicitly mapped: `Route::get('/', [JokeController::class, 'index']);`.
+    - **Form error naming:** Error components must match the form field `name` attribute (`content`, not `description`) for `@error` to find the session error bag.
+    - **HTML5 vs Backend validation:** Client-side HTML5 `required` attributes intercept submissions in the browser before the request reaches Laravel's `$request->validate()`.
 
 <!-- INSERT NEXT DAILY ENTRY HERE -->
 

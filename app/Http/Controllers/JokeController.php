@@ -37,6 +37,11 @@ class JokeController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => ['required', 'string', 'min:5'],
+            'content' => ['required', 'string', 'max:255', 'min:10'],
+        ]);
+
         $title = request('title');
         $content = request('content');
 
@@ -74,6 +79,12 @@ class JokeController extends Controller
      */
     public function update(Request $request, Joke $joke)
     {
+
+        $request->validate([
+            'title' => ['required', 'string', 'min:5'],
+            'content' => ['required', 'string', 'max:255', 'min:10'],
+        ]);
+
         $joke->update(request()->only(['title', 'content']));
 
         return redirect("/jokes/{$joke->id}")->with('success', 'Joke updated successfully!');
