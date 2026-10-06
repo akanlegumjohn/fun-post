@@ -25,29 +25,42 @@
                 </div>
             </div>
 
-            {{-- Search Bar Placeholder --}}
-            <div class="hidden md:flex flex-1 max-w-md mx-4">
-                <div class="relative w-full">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </span>
-                    <input
-                        type="text"
-                        placeholder="Search punchlines, memes, creators..."
-                        class="w-full pl-9 pr-4 py-1.5 text-sm bg-slate-100 border-none rounded-full focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
-                </div>
-            </div>
-
-            {{-- Right Actions --}}
-            <div class="flex items-center gap-3">
-
-
-                <a href="{{ url('/jokes/create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition text-sm font-medium">
+            {{-- Nav Items in Middle --}}
+            <nav class="flex items-center gap-6">
+                <a href="{{ url('/') }}" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition">
+                    Jokes
+                </a>
+                <a href="{{ url('/jokes/create') }}" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition">
                     Post a Joke
                 </a>
+                <a href="{{ url('/faq') }}" class="text-sm font-medium text-slate-600 hover:text-indigo-600 transition">
+                    FAQ
+                </a>
+            </nav>
+
+            {{-- Right Actions: Register CTA --}}
+            @guest
+            <div class="flex items-center gap-3">
+                <a href="{{ url('/auth/register') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition text-sm font-semibold shadow-sm">
+                    Register
+                </a>
+
+                <a href="{{ url('/auth/login') }}" class="text-sm border border-indigo-600 font-medium text-slate-600 hover:text-indigo-600 transition hover:bg-indigo-100  px-4 py-2 rounded-lg ">
+                    Login
+                </a>
             </div>
+            @endguest
+
+            @auth
+            <form action="{{ url('/auth/logout') }}" method="post" class="flex items-center gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-sm  font-medium text-slate-600 hover:text-indigo-600 transition">
+                    Logout
+                </button>
+            </form>
+
+            @endauth
         </div>
     </header>
 

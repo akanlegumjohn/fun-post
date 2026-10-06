@@ -174,6 +174,43 @@ php artisan tinker                                      # Interactive REPL
     - **Form error naming:** Error components must match the form field `name` attribute (`content`, not `description`) for `@error` to find the session error bag.
     - **HTML5 vs Backend validation:** Client-side HTML5 `required` attributes intercept submissions in the browser before the request reaches Laravel's `$request->validate()`.
 
+### 6th Oct. 2026 — User Authentication: Registration, Sessions & Auth Blade Directives
+
+- **Laracasts Ref:** Authentication fundamentals, `RegisteredUserController`, `SessionsController`, `Auth::attempt()`, `Auth::login()`, `Auth::logout()`, and Blade `@auth` / `@guest` directives.
+- **Core Concept:**
+    - _Stateful Session Authentication:_ Laravel manages web authentication by verifying credentials, issuing an encrypted session cookie via `Auth::attempt($credentials)` or `Auth::login($user)`, and clearing session data on `Auth::logout()`.
+    - _Password Security & Confirmation:_ User passwords must always be securely hashed before persistence (`bcrypt($request->password)` or `Hash::make()`). The `confirmed` rule enforces that `password` matches the `password_confirmation` field automatically.
+    - _Conditional UI Directives:_ Blade's `@auth` and `@guest` directives cleanly toggle interface elements (e.g. login/register buttons vs logout button and user greetings) based on user authentication status.
+- **What I Built in devJokes:**
+    - **User Registration Flow:**
+        - Built [`app/Http/Controllers/Auth/RegisteredUserController.php`](app/Http/Controllers/Auth/RegisteredUserController.php) with `create` and `store` methods.
+        - Enforced strict registration validation: `name` (required, max 255), `email` (valid email, `unique:users`), and `password` (min 8, confirmed, `RulesPassword::default()`).
+        - Saved new users with hashed passwords and auto-authenticated them immediately via `Auth::login($user)`.
+        - Created the registration UI in [`resources/views/auth/register.blade.php`](resources/views/auth/register.blade.php) with integrated field-level error messages.
+    - **Session Login & Logout Flow:**
+        - Built [`app/Http/Controllers/Auth/SessionsController.php`](app/Http/Controllers/Auth/SessionsController.php) handling login form display (`create`), authentication check (`store`), and session invalidation (`destroy`).
+        - Implemented credential verification with `Auth::attempt()`, returning friendly error feedback with `back()->withErrors(...)` and flashing old inputs on failure.
+        - Handled secure logout using `Auth::logout()` and redirect with flash feedback.
+        - Created login UI in [`resources/views/auth/login.blade.php`](resources/views/auth/login.blade.php).
+    - **Header Navigation & Personalized UI:**
+        - Updated [`resources/views/components/layout.blade.php`](resources/views/components/layout.blade.php) with `@guest` (showing Register and Login buttons) and `@auth` (rendering a secure `@method('DELETE')` Logout button).
+        - Updated [`resources/views/jokes/index.blade.php`](resources/views/jokes/index.blade.php) with `@auth` greeting: `"Welcome back, {{ $user->name }}!"`.
+        - Passed `Auth::user()` from `JokeController::index()`.
+    - **Routes:** Added auth endpoints (`GET/POST /auth/register`, `GET/POST /auth/login`, and `DELETE /auth/logout`) in [`routes/web.php`](routes/web.php).
+- **UI Walkthrough / Screenshots:**
+    - **1. Guest Home Page (Register & Login CTAs):**
+      ![Guest Navigation with Auth CTAs](docs/recordings/home_page_with_register_and_login.png)
+    - **2. Registration Form (`/auth/register`):**
+      ![Registration Form](docs/recordings/register_form.png)
+    - **3. Login Form (`/auth/login`):**
+      ![Login Form](docs/recordings/login_form.png)
+    - **4. Authenticated Home Page (Welcome Greeting & Logout CTA):**
+      ![Authenticated User Greeting & Logout Button](docs/recordings/authenticated_user.png)
+- **Gotchas / Quick Notes:**
+    - **Namespace vs Directory structure:** Subdirectory controllers like `app/Http/Controllers/Auth/` must declare `namespace App\Http\Controllers\Auth;` to satisfy Composer's PSR-4 autoloading and avoid `ReflectionException`.
+    - **Logout security:** Logout should always be a state-changing `POST` or `DELETE` request with `@csrf` rather than a simple `GET` link to guard against CSRF vulnerabilities.
+    - **Testing:** Unit/Feature tests for authentication are deferred to a dedicated testing session.
+
 <!-- INSERT NEXT DAILY ENTRY HERE -->
 
 
@@ -196,7 +233,7 @@ php artisan tinker                                      # Interactive REPL
     - [ ] Session 8 (Wed): Custom Form Requests (`StoreJokeRequest`, `UpdateJokeRequest`) isolating validation from controllers.
     - [ ] Session 9 (Thu): PHPUnit tests asserting 422 Unprocessable Content and session validation errors.
 - [ ] **Week 4: Authentication & User Scoping**
-    - [ ] Session 10 (Tue): Laravel Authentication (Breeze / session auth flow).
+    - [x] Session 10 (Tue): Laravel Authentication (Breeze / session auth flow).
     - [ ] Session 11 (Wed): Associating jokes with the authenticated user (`$request->user()->jokes()->create(...)`).
     - [ ] Session 12 (Thu): **Month 1 Review:** Registered users can create and view their dev jokes with 100% PHPUnit coverage.
 

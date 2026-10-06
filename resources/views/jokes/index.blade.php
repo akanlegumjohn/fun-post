@@ -1,6 +1,8 @@
 <x-layout title="FunPost — The Funniest Place on the Internet">
         <div class="grid gap-6">
-                <h1 class="text-xl font-bold text-slate-800">Welcome back, {{ $user['name'] }}!</h1>
+                @auth
+                <h1 class="text-xl font-bold text-slate-800">Welcome back, {{ $user->name }}!</h1>
+                @endauth
 
                 <div>
                         Here are some jokes you might enjoy:

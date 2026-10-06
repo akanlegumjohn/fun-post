@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Joke;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JokeController extends Controller
 {
@@ -12,15 +13,13 @@ class JokeController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         $jokes = Joke::latest()->get();
 
         return view('jokes.index', [
             'jokes' => $jokes,
             'search' => request('search'),
-            'user' => [
-                'name' => 'Kwesi John',
-                'email' => 'kwesi.john@example.com',
-            ],
+            'user' => $user,
         ]);
     }
 
@@ -44,11 +43,12 @@ class JokeController extends Controller
 
         $title = request('title');
         $content = request('content');
+        $user = Auth::user();
 
         Joke::create([
             'title' => $title,
             'content' => $content,
-            'joke_owner' => 'System Admin',
+            'joke_owner' => $user->name,
         ]);
 
         return redirect('/')->with('success', 'Joke created successfully!');
